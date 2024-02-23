@@ -1,0 +1,6 @@
+{
+    "backend_name": "count",
+    "acl": "acl count_host hdr_beg(host) -i count.",
+    "health-check": "/health",
+    "health-check-method": "GET"
+}

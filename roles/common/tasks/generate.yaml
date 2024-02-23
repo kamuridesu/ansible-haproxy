@@ -1,0 +1,25 @@
+---
+- name: Load Variables
+  ansible.builtin.include_vars:
+    file: "{{ var_file }}"
+
+- name: Create frontend HTTP
+  ansible.builtin.lineinfile:
+    insertafter: EOF
+    line: "    {{ vars.acl }}\n    use_backend {{ backend_name }} if {{ backend_name }}_host"
+    state: present
+    path: "/tmp/http.j2"
+
+- name: Create frontend HTTPS
+  ansible.builtin.lineinfile:
+    insertafter: "use_backend.*"
+    line: "    {{ vars.acl }}\n    use_backend {{ backend_name }} if {{ backend_name }}_host"
+    state: present
+    path: "/tmp/https.j2"
+
+- name: Create backend
+  ansible.builtin.lineinfile:
+    insertafter: EOF
+    line: "{{ lookup('template', 'files/backend.j2') }}"
+    state: present
+    path: "/tmp/haproxy.cfg.j2"

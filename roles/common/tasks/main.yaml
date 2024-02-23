@@ -1,0 +1,35 @@
+---
+- name: Check if config file exists
+  ansible.builtin.stat:
+    path: /etc/haproxy/haproxy.cfg
+  register: haproxy_config_file
+
+- name: Backup config file
+  become: true
+  ansible.builtin.copy:
+    src: /etc/haproxy/haproxy.cfg
+    dest: "/home/{{ ansible_facts.env.SUDO_USER }}/haproyx.cfg"
+    remote_src: yes
+  when: haproxy_config_file.stat.exists
+
+- name: Copy template over
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/tmp/{{ item | basename }}"
+  loop: "{{ query('fileglob', 'files/*.j2') }}"
+
+- set_fact: BACKEND_SRC="{{ lookup('env','BACKEND_SRC') }}"
+- set_fact: BACKEND_PORT="{{ lookup('env','BACKEND_PORT') }}"
+
+- ansible.builtin.include_tasks: generate.yaml
+  loop: "{{ query('fileglob', 'data/*.json') }}"
+  loop_control:
+    loop_var: var_file
+
+- name: Insert HTTP frontend
+  ansible.builtin.shell:
+    cmd: cat /tmp/http.j2 >> /tmp/haproxy.cfg.j2
+
+- name: Insert HTTPS frontend
+  ansible.builtin.shell:
+    cmd: cat /tmp/https.j2 >> /tmp/haproxy.cfg.j2

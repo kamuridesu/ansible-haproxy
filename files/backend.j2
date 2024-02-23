@@ -1,0 +1,13 @@
+backend {{ backend_name }}
+    log global
+    mode http
+    balance roundrobin
+    server back {{ BACKEND_SRC }}:{{ BACKEND_PORT }} check maxconn 1000
+    fullconn 100
+    retries 3
+
+    option httpchk {{ health_check_method }} {{ health_check_route }}
+    option forwardfor
+    option httpclose
+
+    http-response del-header ^Server:\

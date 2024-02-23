@@ -1,0 +1,6 @@
+{
+    "backend_name": "invidious",
+    "acl": "acl invidious_host hdr_beg(host) -i inv.",
+    "health_check_route": "/",
+    "health_check_method": "HEAD"
+}

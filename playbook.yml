@@ -1,0 +1,8 @@
+- name: Provision Load Balancer
+  gather_facts: yes
+  hosts: lb
+  remote_user: ubuntu
+  roles:
+    - role: common
+  tags:
+    load-balancer
