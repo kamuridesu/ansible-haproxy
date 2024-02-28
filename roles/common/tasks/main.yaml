@@ -33,3 +33,8 @@
 - name: Insert HTTPS frontend
   ansible.builtin.shell:
     cmd: cat /tmp/https.j2 >> /tmp/haproxy.cfg.j2
+
+- name: Restart HAProxy
+  ansible.builtin.systemd_service:
+    name: haproxy.service
+    state: restarted

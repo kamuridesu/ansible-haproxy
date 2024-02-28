@@ -1,6 +1,6 @@
 name: deploy
 on: 
-  # - push
+  - push
   - workflow_dispatch
 jobs:
   deploy:
@@ -9,6 +9,9 @@ jobs:
     env:
       BACKEND_SRC: "${{ secrets.BACKEND_SRC }}"
       BACKEND_PORT: "${{ secrets.BACKEND_PORT }}"
+      HAPROXY_STATS_USER: "${{ secrets.HAPROXY_STATS_USER }}"
+      HAPROXY_STATS_PASS: "${{ secrets.HAPROXY_STATS_PASS }}"
+
     
     steps:
     - uses: actions/checkout@v3
