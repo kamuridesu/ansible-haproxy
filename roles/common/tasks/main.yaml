@@ -34,13 +34,14 @@
   ansible.builtin.shell:
     cmd: cat /tmp/https.j2 >> /tmp/haproxy.cfg.j2
 
-- name: Restart HAProxy
-  ansible.builtin.systemd_service:
-    name: haproxy.service
-    state: restarted
-
 - name: Copy new template over
   ansible.builtin.copy:
     src: /tmp/haproxy.cfg.j2
     dest: /etc/haproxy/haproxy.cfg
     remote_src: yes
+
+
+- name: Restart HAProxy
+  ansible.builtin.systemd_service:
+    name: haproxy.service
+    state: restarted
