@@ -8,7 +8,7 @@
   become: true
   ansible.builtin.copy:
     src: /etc/haproxy/haproxy.cfg
-    dest: "/home/{{ ansible_facts.env.SUDO_USER }}/haproyx.cfg"
+    dest: "/home/ubuntu/haproyx.cfg"
     remote_src: yes
   when: haproxy_config_file.stat.exists
 
