@@ -48,8 +48,11 @@
     cmd: sudo cat /tmp/https.j2 >> /tmp/haproxy.cfg.j2
 
 - name: Copy new template over
-  ansible.builtin.shell:
-    cmd: sudo cat /tmp/haproxy.cfg.j2 >> /etc/haproxy/haproxy.cfg
+  ansible.builtin.copy:
+    remote_src: yes
+    src: /tmp/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  become: yes
 
 - name: Restart HAProxy
   ansible.builtin.shell:

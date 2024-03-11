@@ -1,5 +1,6 @@
 {
     "backend_name": "count",
+    "domain": "count.kamuridesu.com",
     "acl": "acl count_host hdr_beg(host) -i count.",
     "health_check_route": "/health",
     "health_check_method": "GET"
