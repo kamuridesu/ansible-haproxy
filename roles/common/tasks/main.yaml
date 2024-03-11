@@ -2,6 +2,8 @@
 - set_fact: BACKEND_SRC="{{ lookup('env','BACKEND_SRC') }}"
 - set_fact: BACKEND_PORT="{{ lookup('env','BACKEND_PORT') }}"
 - set_fact: SSL_CERTIFICATE_FILE="{{ lookup('env','SSL_CERTIFICATE_FILE') }}"
+- set_fact: HAPROXY_STATS_USER="{{ lookup('env','HAPROXY_STATS_USER') }}"
+- set_fact: HAPROXY_STATS_PASS="{{ lookup('env','HAPROXY_STATS_PASS') }}"
 
 - name: Check if config file exists
   ansible.builtin.stat:
