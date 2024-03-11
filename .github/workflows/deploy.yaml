@@ -11,6 +11,7 @@ jobs:
       BACKEND_PORT: "${{ secrets.BACKEND_PORT }}"
       HAPROXY_STATS_USER: "${{ secrets.HAPROXY_STATS_USER }}"
       HAPROXY_STATS_PASS: "${{ secrets.HAPROXY_STATS_PASS }}"
+      SSL_CERTIFICATE_FILE: "${{ secrets.SSL_CERTIFICATE_FILE }}"
 
     
     steps:
