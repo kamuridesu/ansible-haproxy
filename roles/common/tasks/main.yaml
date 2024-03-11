@@ -28,20 +28,16 @@
 
 - name: Insert HTTP frontend
   ansible.builtin.shell:
-    cmd: cat /tmp/http.j2 >> /tmp/haproxy.cfg.j2
+    cmd: sudo cat /tmp/http.j2 >> /tmp/haproxy.cfg.j2
 
 - name: Insert HTTPS frontend
   ansible.builtin.shell:
-    cmd: cat /tmp/https.j2 >> /tmp/haproxy.cfg.j2
+    cmd: sudo cat /tmp/https.j2 >> /tmp/haproxy.cfg.j2
 
 - name: Copy new template over
-  ansible.builtin.copy:
-    src: /tmp/haproxy.cfg.j2
-    dest: /etc/haproxy/haproxy.cfg
-    remote_src: yes
-
+  ansible.builtin.shell:
+    cmd: sudo cat /tmp/haproxy.cfg.j2 >> /etc/haproxy/haproxy.cfg
 
 - name: Restart HAProxy
-  ansible.builtin.systemd_service:
-    name: haproxy.service
-    state: restarted
+  ansible.builtin.shell:
+    cmd: sudo systemctl restart haproxy
