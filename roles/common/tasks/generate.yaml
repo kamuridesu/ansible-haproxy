@@ -3,8 +3,6 @@
   ansible.builtin.include_vars:
     file: "{{ var_file }}"
 
-- set_fact: SSL_CERTIFICATE_FILE="{{ lookup('env','SSL_CERTIFICATE_FILE') }}"
-
 - name: Create frontend HTTP
   ansible.builtin.lineinfile:
     insertafter: EOF

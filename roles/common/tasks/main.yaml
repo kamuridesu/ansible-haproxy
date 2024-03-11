@@ -1,4 +1,8 @@
 ---
+- set_fact: BACKEND_SRC="{{ lookup('env','BACKEND_SRC') }}"
+- set_fact: BACKEND_PORT="{{ lookup('env','BACKEND_PORT') }}"
+- set_fact: SSL_CERTIFICATE_FILE="{{ lookup('env','SSL_CERTIFICATE_FILE') }}"
+
 - name: Check if config file exists
   ansible.builtin.stat:
     path: /etc/haproxy/haproxy.cfg
@@ -18,8 +22,15 @@
     dest: "/tmp/{{ item | basename }}"
   loop: "{{ query('fileglob', 'files/*.j2') }}"
 
-- set_fact: BACKEND_SRC="{{ lookup('env','BACKEND_SRC') }}"
-- set_fact: BACKEND_PORT="{{ lookup('env','BACKEND_PORT') }}"
+- name: Copy and fill HTTPS template
+  ansible.builtin.template:
+    src: "files/https.j2"
+    dest: "/tmp/https.j2"
+
+- name: Copy and fill base template
+  ansible.builtin.template:
+    src: "files/haproxy.cfg.j2"
+    dest: "/tmp/haproxy.cfg.j2"
 
 - ansible.builtin.include_tasks: generate.yaml
   loop: "{{ query('fileglob', 'data/*.json') }}"
