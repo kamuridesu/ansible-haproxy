@@ -1,0 +1,7 @@
+{
+    "backend_name": "argo",
+    "domain": "argo.kamuridesu.com",
+    "acl": "acl argo_host hdr_beg(host) -i argo.",
+    "health_check_route": "/",
+    "health_check_method": "HEAD"
+}
