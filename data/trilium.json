@@ -1,0 +1,7 @@
+{
+    "backend_name": "notes",
+    "domain": "notes.kamuridesu.com",
+    "acl": "acl notes_host hdr_beg(host) -i notes.",
+    "health_check_route": "/",
+    "health_check_method": "HEAD"
+}
