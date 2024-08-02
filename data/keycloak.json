@@ -1,0 +1,7 @@
+{
+    "backend_name": "keycloak",
+    "domain": "keycloak.kamuridesu.com",
+    "acl": "acl keycloak_host hdr_beg(host) -i keycloak.",
+    "health_check_route": "/health/ready",
+    "health_check_method": "HEAD"
+}
