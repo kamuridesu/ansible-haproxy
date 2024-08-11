@@ -1,7 +1,7 @@
 {
     "backend_name": "whatsapp",
     "domain": "api.kamuridesu.com",
-    "acl": "acl ocr_host path -i beg /api/whatsapp-webhook",
+    "acl": "acl whatsapp_host path -i beg /api/whatsapp-webhook",
     "health_check_route": "/health",
     "health_check_method": "HEAD"
 }
