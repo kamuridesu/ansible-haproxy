@@ -1,6 +1,7 @@
 frontend www_https
     log global
-    bind *:443 ssl crt {{ SSL_CERTIFICATE_FILE }}
+    bind *:80
+    bind *:443 ssl crt {{ ssl_certificate_file }}
     http-request add-header X-Forwarded-Proto https
     http-request set-header X-SSL %[ssl_fc]
     mode http
@@ -23,10 +24,6 @@ frontend www_https
     http-request deny if forbidden_uris
 
     acl letsencrypt-acl path_beg /.well-known/acme-challenge/
-
     use_backend letsencrypt-backend if letsencrypt-acl
 
-
-backend letsencrypt-backend
-    server letsencrypt 127.0.0.1:54321
-
+{{ haproxy_acl }}

@@ -1,5 +1,5 @@
 - name: Provision Load Balancer
-  gather_facts: yes
+  gather_facts: false
   hosts: lb
   remote_user: ubuntu
   roles:

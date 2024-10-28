@@ -1,9 +1,12 @@
 ---
-- set_fact: BACKEND_SRC="{{ lookup('env','BACKEND_SRC') }}"
-- set_fact: BACKEND_PORT="{{ lookup('env','BACKEND_PORT') }}"
-- set_fact: SSL_CERTIFICATE_FILE="{{ lookup('env','SSL_CERTIFICATE_FILE') }}"
-- set_fact: HAPROXY_STATS_USER="{{ lookup('env','HAPROXY_STATS_USER') }}"
-- set_fact: HAPROXY_STATS_PASS="{{ lookup('env','HAPROXY_STATS_PASS') }}"
+
+- name: Set HAProxy stats user
+  ansible.builtin.set_fact:
+    haproxy_stats_user: "{{ lookup('env', 'HAPROXY_STATS_USER') }}"
+    haproxy_stats_pass: "{{ lookup('env', 'HAPROXY_STATS_PASS') }}"
+    ssl_certificate_file: "{{ lookup('env', 'SSL_CERTIFICATE_FILE') }}"
+    backend_src: "{{ lookup('env', 'BACKEND_SRC') }}"
+    backend_port: "{{ lookup('env', 'BACKEND_PORT') }}"
 
 - name: Check if config file exists
   ansible.builtin.stat:
@@ -15,45 +18,17 @@
   ansible.builtin.copy:
     src: /etc/haproxy/haproxy.cfg
     dest: "/home/ubuntu/haproyx.cfg"
-    remote_src: yes
+    remote_src: true
+    mode: '0644'
   when: haproxy_config_file.stat.exists
 
-- name: Copy template over
-  ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: "/tmp/{{ item | basename }}"
-  loop: "{{ query('fileglob', 'files/*.j2') }}"
-
-- name: Copy and fill HTTPS template
-  ansible.builtin.template:
-    src: "files/https.j2"
-    dest: "/tmp/https.j2"
-
-- name: Copy and fill base template
-  ansible.builtin.template:
-    src: "files/haproxy.cfg.j2"
-    dest: "/tmp/haproxy.cfg.j2"
-
-- ansible.builtin.include_tasks: generate.yaml
-  loop: "{{ query('fileglob', 'data/*.json') }}"
-  loop_control:
-    loop_var: var_file
-
-- name: Insert HTTP frontend
-  ansible.builtin.shell:
-    cmd: sudo cat /tmp/http.j2 >> /tmp/haproxy.cfg.j2
-
-- name: Insert HTTPS frontend
-  ansible.builtin.shell:
-    cmd: sudo cat /tmp/https.j2 >> /tmp/haproxy.cfg.j2
-
-- name: Copy new template over
-  ansible.builtin.copy:
-    remote_src: yes
-    src: /tmp/haproxy.cfg.j2
-    dest: /etc/haproxy/haproxy.cfg
-  become: yes
+- name: Generate config
+  ansible.builtin.include_tasks:
+    file: generate.yaml
 
 - name: Restart HAProxy
-  ansible.builtin.shell:
-    cmd: sudo systemctl restart haproxy
+  become: true
+  ansible.builtin.service:
+    name: haproxy
+    state: restarted
+    enabled: true

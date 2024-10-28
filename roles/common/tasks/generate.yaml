@@ -1,25 +1,51 @@
 ---
-- name: Load Variables
-  ansible.builtin.include_vars:
-    file: "{{ var_file }}"
+- name: Get backend configs
+  ansible.builtin.set_fact:
+    backends: "{{ backends | default([]) + [lookup('file', item) | from_json] }}"
+  loop: "{{ query('fileglob', 'data/*.json') }}"
 
-- name: Create frontend HTTP
-  ansible.builtin.lineinfile:
-    insertafter: EOF
-    line: "    {{ vars.acl }}\n    use_backend {{ backend_name }} if {{ backend_name }}_host"
-    state: present
-    path: "/tmp/http.j2"
+- name: Debug
+  ansible.builtin.debug:
+    var: backends
 
-- name: Create frontend HTTPS
-  ansible.builtin.lineinfile:
-    insertafter: "use_backend.*"
-    line: "    {{ vars.acl }}\n    use_backend {{ backend_name }} if {{ backend_name }}_host"
-    state: present
-    path: "/tmp/https.j2"
+- name: Generate HAProxy backend
+  ansible.builtin.set_fact:
+    haproxy_backend: |
+      {% for backend in backends %}
+      backend {{ backend.backend_name }}_backend
+          log global
+          mode http
+          balance roundrobin
+          server back {{ backend.backend_src | default(backend_src) }}:{{ backend.backend_port | default(backend_port) }} check check-sni {{ backend.domain }} sni str({{ backend.domain }})
+          http-request set-header Host {{ backend.domain }}
 
-- name: Create backend
-  ansible.builtin.lineinfile:
-    insertafter: EOF
-    line: "{{ lookup('template', 'files/backend.j2') }}"
-    state: present
-    path: "/tmp/haproxy.cfg.j2"
+      {% endfor %}
+
+- name: Debug
+  ansible.builtin.debug:
+    var: haproxy_backend
+
+- name: Generate ACL config
+  ansible.builtin.set_fact:
+    haproxy_acl: |
+      {% for backend in backends %}
+          {{ backend.acl }}
+          use_backend {{ backend.backend_name }}_backend if {{ backend.backend_name }}_host
+
+      {% endfor %}
+
+- name: Debug
+  ansible.builtin.debug:
+    var: haproxy_acl
+
+- name: Fill backend template and save it to a variable
+  ansible.builtin.set_fact:
+    haproxy_frontend: "{{ lookup('template', 'files/https.j2') }}"
+  # delegate_to: localhost
+
+- name: Fill the base template and save it to /etc/haproxy/haproxy.cfg
+  ansible.builtin.template:
+    src: files/base.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: '0644'
+  # delegate_to: localhost

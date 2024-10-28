@@ -1,6 +1,0 @@
-backend {{ backend_name }}
-    log global
-    mode http
-    balance roundrobin
-    server back {{ BACKEND_SRC }}:{{ BACKEND_PORT }} check check-sni {{ domain }} sni str({{ domain }})
-    http-request set-header Host {{ domain }}
