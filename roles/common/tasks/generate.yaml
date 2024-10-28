@@ -31,10 +31,20 @@
     haproxy_frontend: "{{ lookup('template', 'files/https.j2') }}"
   # delegate_to: localhost
 
-- name: Fill the base template and save it to /etc/haproxy/haproxy.cfg
-  become: true
+- name: Fill the base template and save it to /tmp/haproxy.cfg
   ansible.builtin.template:
     src: files/base.j2
-    dest: /etc/haproxy/haproxy.cfg
+    dest: /tmp/haproxy.cfg
     mode: '0644'
   # delegate_to: localhost
+
+- name: Test the new config
+  ansible.builtin.command: haproxy -c -f /tmp/haproxy.cfg
+  register: haproxy_test
+
+- name: Copy the new config to /etc/haproxy/haproxy.cfg
+  ansible.builtin.copy:
+    src: /tmp/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    mode: '0644'
+  when: haproxy_test.rc == 0
