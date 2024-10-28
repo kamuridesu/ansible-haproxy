@@ -43,6 +43,7 @@
   register: haproxy_test
 
 - name: Copy the new config to /etc/haproxy/haproxy.cfg
+  become: true
   ansible.builtin.copy:
     src: /tmp/haproxy.cfg
     dest: /etc/haproxy/haproxy.cfg
