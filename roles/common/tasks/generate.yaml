@@ -47,4 +47,5 @@
     src: /tmp/haproxy.cfg
     dest: /etc/haproxy/haproxy.cfg
     mode: '0644'
+    remote_src: true
   when: haproxy_test.rc == 0
