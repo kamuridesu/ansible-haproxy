@@ -38,7 +38,7 @@ listen Statistics
 listen proxy
     bind *:1080
     mode tcp
-    set-header Host proxy.kamuridesu.com
+    http-request set-header Host proxy.kamuridesu.com
     server back {{ backend_src }}:{{ backend_port }} check
 
 backend letsencrypt-backend
