@@ -12,6 +12,8 @@ jobs:
       HAPROXY_STATS_USER: "${{ secrets.HAPROXY_STATS_USER }}"
       HAPROXY_STATS_PASS: "${{ secrets.HAPROXY_STATS_PASS }}"
       SSL_CERTIFICATE_FILE: "${{ secrets.SSL_CERTIFICATE_FILE }}"
+      PROXY_PORT: "${{ secrets.PROXY_PORT }}"
+      PROXY_HOST: "${{ secrets.PROXY_HOST }}"
     
     steps:
     - uses: actions/checkout@v3
