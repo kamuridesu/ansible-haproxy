@@ -35,6 +35,11 @@ listen Statistics
     stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_pass }}
     stats uri /stats
 
+listen proxy
+    bind: *:1080
+    mode tcp
+    server back {{ backend_src }}:{{ backend_port }} check
+
 backend letsencrypt-backend
     server letsencrypt 127.0.0.1:54321
 
