@@ -45,6 +45,14 @@
         server back {{ proxy_host }}:{{ proxy_port }} check
   when: proxy_host_set
 
+- name: Debug proxy
+  ansible.builtin.debug:
+    msg: "{{ proxy_config }}"
+
+- name: Debug proxy variables
+  ansible.builtin.debug:
+    msg: "{{ proxy_host }}:{{ proxy_port }}"
+
 - name: Fill frontend template and save it to a variable
   ansible.builtin.set_fact:
     haproxy_frontend: "{{ lookup('template', 'files/https.j2') }}"
