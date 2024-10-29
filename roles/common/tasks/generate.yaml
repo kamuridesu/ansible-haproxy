@@ -1,4 +1,9 @@
 ---
+- name: Set proxy variables
+  ansible.builtin.set_fact:
+    proxy_port: "{{ lookup('env', 'PROXY_PORT') }}"
+    proxy_host: "{{ lookup('env', 'PROXY_HOST') }}"
+
 - name: Get backend configs
   ansible.builtin.set_fact:
     backends: "{{ backends | default([]) + [lookup('file', item) | from_json] }}"
@@ -26,7 +31,23 @@
 
       {% endfor %}
 
-- name: Fill backend template and save it to a variable
+- name: Check if proxy host is set
+  ansible.builtin.set_fact:
+    proxy_host_set: "{{ True if proxy_host else False }}"
+  register: proxy_host_set
+
+- name: Generate Proxy config
+  ansible.builtin.set_fact:
+    proxy_config: |
+      {% if proxy_host_set %}
+      listen proxy
+        bind *:1080
+        mode tcp
+        server back {{ proxy_host }}:{{ proxy_port }} check
+
+      {% endif %}
+
+- name: Fill frontend template and save it to a variable
   ansible.builtin.set_fact:
     haproxy_frontend: "{{ lookup('template', 'files/https.j2') }}"
   # delegate_to: localhost

@@ -27,3 +27,6 @@ frontend www_https
     use_backend letsencrypt-backend if letsencrypt-acl
 
 {{ haproxy_acl }}
+
+backend letsencrypt-backend
+    server letsencrypt 127.0.0.1:54321
