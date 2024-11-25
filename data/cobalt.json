@@ -3,6 +3,5 @@
     "domain": "cobalt.kamuridesu.com",
     "acl": "acl cobalt_host hdr_beg(host) -i cobalt.",
     "health_check_route": "/",
-    "health_check_method": "HEAD",
-    "backend_port": 9000
+    "health_check_method": "HEAD"
 }
