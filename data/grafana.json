@@ -1,0 +1,7 @@
+{
+    "backend_name": "grafana",
+    "domain": "grafana.kamuridesu.com",
+    "acl": "acl grafana_host hdr_beg(host) -i grafana.",
+    "health_check_route": "/api/health",
+    "health_check_method": "GET"
+}
