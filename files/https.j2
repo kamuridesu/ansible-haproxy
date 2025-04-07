@@ -1,7 +1,10 @@
 frontend www_https
     log global
     bind *:80
-    bind *:443 ssl crt {{ ssl_certificate_file }}
+    {% if ssl_certificate_file %}
+bind *:443 ssl crt {{ ssl_certificate_file }}
+    {% endif %}
+    
     http-request add-header X-Forwarded-Proto https
     http-request set-header X-SSL %[ssl_fc]
     mode http

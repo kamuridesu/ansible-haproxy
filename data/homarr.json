@@ -1,0 +1,4 @@
+{
+    "config": "backend homarr_backend\n    log global\n    mode http\n    balance roundrobin\n    server back home.server check\n    http-request set-header Host hadarr.local",
+    "custom_acl": "acl is_homarr hdr_beg(host) -i home.\n    use_backend homarr_backend if is_homarr { path_beg /homarr }"
+}

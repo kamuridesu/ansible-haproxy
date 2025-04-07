@@ -13,12 +13,16 @@
   ansible.builtin.set_fact:
     haproxy_backend: |
       {% for backend in backends %}
+      {% if backend.config is defined %}
+      {{ backend.config }}
+      {% else %}
       backend {{ backend.backend_name }}_backend
           log global
           mode http
           balance roundrobin
           server back {{ backend.backend_src | default(backend_src) }}:{{ backend.backend_port | default(backend_port) }} check check-sni {{ backend.domain }} sni str({{ backend.domain }})
           http-request set-header Host {{ backend.domain }}
+      {% endif %}
 
       {% endfor %}
 
@@ -26,8 +30,12 @@
   ansible.builtin.set_fact:
     haproxy_acl: |
       {% for backend in backends %}
+          {% if backend.custom_acl is defined %}
+          {{ backend.custom_acl }}
+          {% else %}
           {{ backend.acl }}
           use_backend {{ backend.backend_name }}_backend if {{ backend.backend_name }}_host
+          {% endif %}
 
       {% endfor %}
 

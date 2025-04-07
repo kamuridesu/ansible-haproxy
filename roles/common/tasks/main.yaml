@@ -17,7 +17,7 @@
   become: true
   ansible.builtin.copy:
     src: /etc/haproxy/haproxy.cfg
-    dest: "/home/ubuntu/haproyx.cfg"
+    dest: "/home/{{ ansible_ssh_user }}/haproyx.cfg"
     remote_src: true
     mode: '0644'
   when: haproxy_config_file.stat.exists
