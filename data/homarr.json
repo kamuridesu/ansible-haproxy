@@ -1,4 +1,9 @@
 {
-    "config": "backend homarr_backend\n    log global\n    mode http\n    balance roundrobin\n    server back home.server:8096 check\n    http-request set-header Host hadarr.local",
-    "custom_acl": "acl is_homarr hdr_beg(host) -i home.\n    use_backend homarr_backend if is_homarr { path_beg /homarr }"
+    "backend_name": "homarr",
+    "domain": "home.kamuridesu.com",
+    "acl": "acl homarr_host hdr_beg(host) -i home.",
+    "health_check_route": "/",
+    "health_check_method": "HEAD",
+    "backend_src": "home.server",
+    "backend_port": "8096"
 }
