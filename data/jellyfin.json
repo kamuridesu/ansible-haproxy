@@ -1,6 +1,6 @@
 {
     "backend_name": "jellyfin",
-    "domain": "jellyfin.kamuridesu.com",
+    "domain": "jellyfin.local",
     "acl": "acl jellyfin_host hdr_beg(host) -i jellyfin.",
     "health_check_route": "/",
     "health_check_method": "HEAD",

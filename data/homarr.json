@@ -1,6 +1,6 @@
 {
     "backend_name": "homarr",
-    "domain": "home.kamuridesu.com",
+    "domain": "homarr.local",
     "acl": "acl homarr_host hdr_beg(host) -i home.",
     "health_check_route": "/",
     "health_check_method": "HEAD",
