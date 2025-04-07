@@ -1,0 +1,7 @@
+{
+    "backend_name": "home",
+    "domain": "home.kamuridesu.com",
+    "acl": "acl home_host hdr_beg(host) -i home.",
+    "health_check_route": "/",
+    "health_check_method": "HEAD"
+}
