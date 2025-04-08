@@ -1,0 +1,8 @@
+{
+    "backend_name": "postgres",
+    "domain": "postgres.kamuridesu.com",
+    "acl": "acl postgers_host hdr_beg(host) -i postgres.",
+    "health_check_route": "/",
+    "health_check_method": "HEAD",
+    "backend_port": "5432"
+}
