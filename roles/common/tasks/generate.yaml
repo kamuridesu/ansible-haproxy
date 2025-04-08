@@ -4,6 +4,11 @@
     proxy_port: "{{ lookup('env', 'PROXY_PORT') }}"
     proxy_host: "{{ lookup('env', 'PROXY_HOST') }}"
 
+- name: Set database variables
+  ansible.builtin.set_fact:
+    database_host: "{{ lookup('env', 'DATABASE_HOST') }}"
+    database_port: "{{ lookup('env', 'DATABASE_PORT') }}"
+
 - name: Get backend configs
   ansible.builtin.set_fact:
     backends: "{{ backends | default([]) + [lookup('file', item) | from_json] }}"
@@ -33,16 +38,11 @@
           {% if backend.custom_acl is defined %}
           {{ backend.custom_acl }}
           {% else %}
-          {{ backend.acl }}
+      {{ backend.acl }}
           use_backend {{ backend.backend_name }}_backend if {{ backend.backend_name }}_host
           {% endif %}
 
       {% endfor %}
-
-- name: Check if proxy host is set
-  ansible.builtin.set_fact:
-    proxy_host_set: "{{ True if proxy_host else False }}"
-  register: proxy_host_set
 
 - name: Generate Proxy config
   ansible.builtin.set_fact:
@@ -51,7 +51,16 @@
         bind *:1080
         mode tcp
         server back {{ proxy_host }}:{{ proxy_port }} check
-  when: proxy_host_set
+  when: proxy_host != ""
+
+- name: Generate database config
+  ansible.builtin.set_fact:
+    database_config: |
+      listen database
+        bind: *:5432
+        mode tcp
+        server db {{ database_host }}:{{ database_port }} check
+  when: database_host != ""
 
 - name: Fill frontend template and save it to a variable
   ansible.builtin.set_fact:
@@ -62,7 +71,7 @@
   ansible.builtin.template:
     src: files/base.j2
     dest: /tmp/haproxy.cfg
-    mode: '0644'
+    mode: "0644"
   # delegate_to: localhost
 
 - name: Test the new config
@@ -74,6 +83,6 @@
   ansible.builtin.copy:
     src: /tmp/haproxy.cfg
     dest: /etc/haproxy/haproxy.cfg
-    mode: '0644'
+    mode: "0644"
     remote_src: true
   when: haproxy_test.rc == 0

@@ -36,6 +36,10 @@ listen Statistics
     stats uri /stats
 
 {{ proxy_config | default('') }}
+
+
+{{ database_config | default('') }}
+
 {{ haproxy_frontend }}
 
 {{ haproxy_backend }}
