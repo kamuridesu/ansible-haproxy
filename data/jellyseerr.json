@@ -1,7 +1,7 @@
 {
     "backend_name": "jellyseerr",
     "domain": "seerr.local",
-    "acl": "acl jellyfin_host hdr_beg(host) -i seerr.",
+    "acl": "acl jellyseerr_host hdr_beg(host) -i seerr.",
     "health_check_route": "/",
     "health_check_method": "HEAD",
     "backend_src": "home.server",
