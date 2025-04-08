@@ -57,7 +57,7 @@
   ansible.builtin.set_fact:
     database_config: |
       listen database
-        bind: *:5432
+        bind *:5432
         mode tcp
         server db {{ database_host }}:{{ database_port }} check
   when: database_host != ""
