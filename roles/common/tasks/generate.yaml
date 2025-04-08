@@ -24,7 +24,7 @@
       backend {{ backend.backend_name }}_backend
           log global
           {% if backend.mode is defined %}
-          {{ backend.mode }}
+          mode {{ backend.mode }}
           {% else %}
           mode http 
           {% endif %}
