@@ -1,5 +1,5 @@
 name: deploy
-on: 
+on:
   - push
   - workflow_dispatch
 jobs:
@@ -14,15 +14,17 @@ jobs:
       SSL_CERTIFICATE_FILE: "${{ secrets.SSL_CERTIFICATE_FILE }}"
       PROXY_PORT: "${{ secrets.PROXY_PORT }}"
       PROXY_HOST: "${{ secrets.PROXY_HOST }}"
-    
-    steps:
-    - uses: actions/checkout@v3
+      DATABASE_HOST: "${{ secrets.DATABASE_HOST }}"
+      DATABASE_PORT: "${{ secrets.DATABASE_PORT }}"
 
-    - name: Run playbook
-      uses: dawidd6/action-ansible-playbook@v2
-      with:
-        playbook: playbook.yml
-        directory: ./
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        inventory: |
-          ${{ secrets.INVENTORY }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: playbook.yml
+          directory: ./
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: |
+            ${{ secrets.INVENTORY }}
