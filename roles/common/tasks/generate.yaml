@@ -23,7 +23,11 @@
       {% else %}
       backend {{ backend.backend_name }}_backend
           log global
-          mode http
+          {% if backend.mode is defined %}
+          {{ backend.mode }}
+          {% else %}
+          mode http 
+          {% endif %}
           balance roundrobin
           server back {{ backend.backend_src | default(backend_src) }}:{{ backend.backend_port | default(backend_port) }} check check-sni {{ backend.domain }} sni str({{ backend.domain }})
           http-request set-header Host {{ backend.domain }}
