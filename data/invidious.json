@@ -1,9 +1,7 @@
 {
     "backend_name": "invidious",
-    "domain": "inv.local",
+    "domain": "inv.kamuridesu.com",
     "acl": "acl invidious_host hdr_beg(host) -i inv.",
     "health_check_route": "/",
-    "health_check_method": "HEAD",
-    "backend_src": "home.server",
-    "backend_port": "8096"
+    "health_check_method": "HEAD"
 }
