@@ -4,11 +4,6 @@
     proxy_port: "{{ lookup('env', 'PROXY_PORT') }}"
     proxy_host: "{{ lookup('env', 'PROXY_HOST') }}"
 
-- name: Set database variables
-  ansible.builtin.set_fact:
-    database_host: "{{ lookup('env', 'DATABASE_HOST') }}"
-    database_port: "{{ lookup('env', 'DATABASE_PORT') }}"
-
 - name: Get backend configs
   ansible.builtin.set_fact:
     backends: "{{ backends | default([]) + [lookup('file', item) | from_json] }}"
@@ -23,11 +18,7 @@
       {% else %}
       backend {{ backend.backend_name }}_backend
           log global
-          {% if backend.mode is defined %}
-          mode {{ backend.mode }}
-          {% else %}
           mode http 
-          {% endif %}
           balance roundrobin
           server back {{ backend.backend_src | default(backend_src) }}:{{ backend.backend_port | default(backend_port) }} check check-sni {{ backend.domain }} sni str({{ backend.domain }})
           http-request set-header Host {{ backend.domain }}
@@ -56,15 +47,6 @@
         mode tcp
         server back {{ proxy_host }}:{{ proxy_port }} check
   when: proxy_host != ""
-
-- name: Generate database config
-  ansible.builtin.set_fact:
-    database_config: |
-      listen database
-        bind *:5432
-        mode tcp
-        server db {{ database_host }}:{{ database_port }} check
-  when: database_host != ""
 
 - name: Fill frontend template and save it to a variable
   ansible.builtin.set_fact:
