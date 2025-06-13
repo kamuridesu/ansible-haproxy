@@ -1,0 +1,7 @@
+{
+    "backend_name": "sblob",
+    "domain": "kamuridesu.com",
+    "acl": "acl count_host hdr_beg(host) -i kamuridesu.",
+    "health_check_route": "/",
+    "health_check_method": "GET"
+}
