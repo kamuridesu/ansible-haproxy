@@ -1,7 +1,7 @@
 {
     "backend_name": "pokelogger",
     "domain": "tools.kamuridesu.com",
-    "acl": "acl ytdl_host path_beg /pokelogger",
+    "acl": "acl pokelogger_host path_beg /pokelogger",
     "health_check_route": "/pokelogger/health",
     "health_check_method": "HEAD"
 }
