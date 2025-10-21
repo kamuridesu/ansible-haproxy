@@ -1,0 +1,7 @@
+{
+    "backend_name": "rebobina",
+    "domain": "tools.kamuridesu.com",
+    "acl": "acl rebobina_host path_beg /rebobina",
+    "health_check_route": "/rebobina",
+    "health_check_method": "HEAD"
+}

@@ -1,7 +1,0 @@
-{
-    "backend_name": "ddtest",
-    "domain": "tools.kamuridesu.com",
-    "acl": "acl ddtest_host path_beg /dd-test",
-    "health_check_route": "/dd-test/health",
-    "health_check_method": "HEAD"
-}
