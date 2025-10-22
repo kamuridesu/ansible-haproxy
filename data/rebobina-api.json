@@ -1,7 +1,7 @@
 {
     "backend_name": "reboserver",
     "domain": "api.kamuridesu.com",
-    "acl": "acl reboserver_host path_get /api",
+    "acl": "acl reboserver_host path_beg /api",
     "health_check_route": "/api",
     "health_check_method": "HEAD"
 }
