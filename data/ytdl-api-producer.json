@@ -1,7 +1,7 @@
 {
     "backend_name": "ytdl",
     "domain": "api.kamuridesu.com",
-    "acl": "acl ytdl_host path_beg /api/ytdl",
-    "health_check_route": "/api/ytdl/health",
+    "acl": "acl ytdl_host path_beg /ytdl",
+    "health_check_route": "/ytdl/health",
     "health_check_method": "HEAD"
 }
