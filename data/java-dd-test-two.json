@@ -1,7 +1,7 @@
 {
     "backend_name": "java-dd-test-two",
     "domain": "api.kamuridesu.com",
-    "acl": "acl java-dd-test-two_acl path_beg /java-dd-test-two",
+    "acl": "acl java-dd-test-two_host path_beg /java-dd-test-two",
     "health_check_route": "/java-dd-test-two/actuator/health",
     "health_check_method": "HEAD"
 }
