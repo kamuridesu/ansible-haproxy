@@ -30,12 +30,28 @@
   ansible.builtin.set_fact:
     haproxy_acl: |
       {% for backend in backends %}
-          {% if backend.custom_acl is defined %}
-          {{ backend.custom_acl }}
-          {% else %}
-      {{ backend.acl }}
-          use_backend {{ backend.backend_name }}_backend if {{ backend.backend_name }}_host
-          {% endif %}
+      {% if backend.custom_acl is defined %}
+         {{ backend.custom_acl }}
+
+      {% else %}
+      {% set raw_input = backend.acl_rules | default(backend.acl) | default([]) %}
+      {% set rules = [raw_input] if raw_input is string else raw_input %}
+
+      {% if backend.match_mode is defined and backend.match_mode == 'and' %}
+      {% set criteria_names = [] %}
+      {% for rule in rules %}
+          acl {{ backend.backend_name }}_crit_{{ loop.index }} {{ rule }}
+      {% set _ = criteria_names.append(backend.backend_name + '_crit_' + loop.index|string) %}
+      {% endfor %}
+          use_backend {{ backend.backend_name }}_backend if {{ criteria_names | join(' ') }}
+
+      {% else %}
+      {% for rule in rules %}
+          acl {{ backend.backend_name }}_match {{ rule }}
+      {% endfor %}
+          use_backend {{ backend.backend_name }}_backend if {{ backend.backend_name }}_match
+      {% endif %}
+      {% endif %}
 
       {% endfor %}
 
@@ -63,6 +79,8 @@
 - name: Test the new config
   ansible.builtin.command: haproxy -c -f /tmp/haproxy.cfg
   register: haproxy_test
+  environment:
+    PATH: "{{ ansible_facts['env']['PATH'] }}:/usr/sbin"
 
 - name: Copy the new config to /etc/haproxy/haproxy.cfg
   become: true
