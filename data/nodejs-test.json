@@ -1,8 +1,8 @@
 {
   "backend_name": "nodejs-test",
   "domain": "api.kamuridesu.com",
-  "acl": ["path_beg /api", "hdr(host) -i api.kamuridesu.com"],
+  "acl": ["path_beg /nodejs/api", "hdr(host) -i api.kamuridesu.com"],
   "match_mode": "and",
-  "health_check_route": "/api/callback",
+  "health_check_route": "/nodejs/api/callback",
   "health_check_method": "POST"
 }
