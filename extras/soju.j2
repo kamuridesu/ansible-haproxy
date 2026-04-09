@@ -3,4 +3,6 @@ listen soju_irc
     mode tcp
     option tcplog
     server k3s-control-plane {{ backend_src }}:30667 send-proxy-v2 check inter 30s
+    timeout client 24h
+    timeout server 24h
 
