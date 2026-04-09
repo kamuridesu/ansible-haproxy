@@ -64,6 +64,11 @@
         server back {{ proxy_host }}:{{ proxy_port }} check
   when: proxy_host != ""
 
+- name: Generate Extra configs
+  ansible.builtin.set_fact:
+    extra_configs: "{{ extra_configs | default('') + lookup('template', item) + '\n\n' }}"
+  loop: "{{ query('fileglob', 'extras/*.j2') }}"
+
 - name: Fill frontend template and save it to a variable
   ansible.builtin.set_fact:
     haproxy_frontend: "{{ lookup('template', 'files/https.j2') }}"

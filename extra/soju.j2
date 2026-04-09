@@ -1,0 +1,6 @@
+listen soju_irc
+    bind *:6697 ssl crt {{ ssl_certificate_file }}
+    mode tcp
+    option tcplog
+    server k3s-control-plane {{ backend_src }}:30667 send-proxy-v2 check
+
