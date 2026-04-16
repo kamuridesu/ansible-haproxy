@@ -2,6 +2,11 @@ listen soju_irc
     bind *:6697 ssl crt {{ ssl_certificate_file }}
     mode tcp
     option tcplog
+    option tcp-check
+    tcp-check connect ssl
+    tcp-check send CAP\ LS\ 302\r\n
+    tcp-check expect string CAP
+    tcp-check send QUIT\r\n
     server k3s-control-plane {{ backend_src }}:30667 ssl verify required ca-file /etc/ssl/certs/internal-ca.crt sni str(kamuridesu.com) check inter 30s
     timeout client 24h
     timeout server 24h
