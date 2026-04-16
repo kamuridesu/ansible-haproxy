@@ -2,7 +2,7 @@ listen soju_irc
     bind *:6697 ssl crt {{ ssl_certificate_file }}
     mode tcp
     option tcplog
-    server k3s-control-plane {{ backend_src }}:30667 send-proxy-v2 check inter 30s
+    server k3s-control-plane {{ backend_src }}:30667 ssl verify required ca-file /etc/ssl/certs/internal-ca.crt send-proxy-v2 check inter 30s
     timeout client 24h
     timeout server 24h
 

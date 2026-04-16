@@ -20,7 +20,7 @@
           log global
           mode http 
           balance roundrobin
-          server back {{ backend.backend_src | default(backend_src) }}:{{ backend.backend_port | default(backend_port) }} check check-sni {{ backend.domain }} sni str({{ backend.domain }})
+          server back {{ backend.backend_src | default(backend_src) }}:{{ backend.backend_port | default(backend_port) }} ssl verify required ca-file /etc/ssl/certs/internal-ca.crt check check-sni {{ backend.domain }} sni str({{ backend.domain }})
           http-request set-header Host {{ backend.domain }}
       {% endif %}
 
