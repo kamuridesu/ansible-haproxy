@@ -21,7 +21,7 @@
           mode http 
           balance roundrobin
           {% if backend.cert is not defined %}
-          {% set ssl_verify = 'verify required ca-file /etc/ssl/certs/internal-ca.crt' %}
+          {% set ssl_verify = 'ssl verify required ca-file /etc/ssl/certs/internal-ca.crt' %}
           {% elif backend.cert is sameas(false) %}
           {% set ssl_verify = 'verify none' %}
           {% else %}
