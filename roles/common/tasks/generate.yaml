@@ -20,7 +20,15 @@
           log global
           mode http 
           balance roundrobin
-          server back {{ backend.backend_src | default(backend_src) }}:{{ backend.backend_port | default(backend_port) }} ssl verify required{% if backend.cert is not defined %} ca-file /etc/ssl/certs/internal-ca.crt{% elif backend.cert is not sameas(false) %} ca-file {{ backend.cert }}{% endif %} check check-sni {{ backend.domain }} sni str({{ backend.domain }})
+          {% if backend.cert is not defined %}
+          {% set ssl_verify = 'verify required ca-file /etc/ssl/certs/internal-ca.crt' %}
+          {% elif backend.cert is sameas(false) %}
+          {% set ssl_verify = 'verify none' %}
+          {% else %}
+          {% set ssl_verify = 'verify required ca-file ' + backend.cert %}
+          {% endif %}
+
+          server back {{ backend.backend_src | default(backend_src) }}:{{ backend.backend_port | default(backend_port) }} ssl {{ ssl_verify }} check check-sni {{ backend.domain }} sni str({{ backend.domain }})
           http-request set-header Host {{ backend.domain }}
       {% endif %}
 
