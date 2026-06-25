@@ -35,8 +35,6 @@ listen Statistics
     stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_pass }}
     stats uri /stats
 
-{{ proxy_config | default('') }}
-
 {{ database_config | default('') }}
 
 {{ haproxy_frontend }}

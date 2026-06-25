@@ -1,9 +1,4 @@
 ---
-- name: Set proxy variables
-  ansible.builtin.set_fact:
-    proxy_port: "{{ lookup('env', 'PROXY_PORT') }}"
-    proxy_host: "{{ lookup('env', 'PROXY_HOST') }}"
-
 - name: Get backend configs
   ansible.builtin.set_fact:
     backends: "{{ backends | default([]) + [lookup('file', item) | from_json] }}"
@@ -62,15 +57,6 @@
       {% endif %}
 
       {% endfor %}
-
-- name: Generate Proxy config
-  ansible.builtin.set_fact:
-    proxy_config: |
-      listen proxy
-        bind *:1080
-        mode tcp
-        server back {{ proxy_host }}:{{ proxy_port }} check
-  when: proxy_host != ""
 
 - name: Generate Extra configs
   ansible.builtin.set_fact:
