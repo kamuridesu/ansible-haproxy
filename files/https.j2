@@ -18,6 +18,9 @@ bind *:443 ssl crt {{ ssl_certificate_file }}
     acl forbidden_src src 0.0.0.0/7 244.0.0.0/3
     acl forbidden_src src_port 0:1023
     http-request deny if forbidden_src
+    stick-table type ip size 100k expire 30s store http_req_rate(10s),conn_cur
+    http-request track-sc0 src
+    http-request deny deny_status 429 if { sc_http_req_rate(0) gt 100 }
 
     acl forbidden_uris url_reg -i .*(\.|%2e)(\.|%2e)(%2f|%5c|/|\\\\)
     acl forbidden_uris url_sub -i %00 <script xmlrpc.php
@@ -25,6 +28,12 @@ bind *:443 ssl crt {{ ssl_certificate_file }}
     acl forbidden_uris path_dir -i chat main.php read_dump.php viewtopic.php phpbb sumthin horde _vti_bin MSOffice
     acl forbidden_uris url_reg -i (\.php\?temppath=|\.php\?setmodules=|[=:]http://)
     http-request deny if forbidden_uris
+
+    http-response set-header X-Frame-Options SAMEORIGIN
+    http-response set-header X-Content-Type-Options nosniff
+    http-response set-header Referrer-Policy strict-origin-when-cross-origin
+    http-response set-header Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    http-response set-header Strict-Transport-Security "max-age=63072000; includeSubDomains"
 
     acl letsencrypt-acl path_beg /.well-known/acme-challenge/
     use_backend letsencrypt-backend if letsencrypt-acl
