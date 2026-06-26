@@ -1,10 +1,10 @@
 {
   "backend_name": "forgejo",
-  "domain": "forgejo.local",
+  "domain": "forgejo.internal",
   "acl": ["hdr_beg(host) -i forgejo."],
   "health_check_route": "/user/login",
   "health_check_method": "HEAD",
   "backend_src": "home.server",
-  "backend_port": "8096",
+  "backend_port": "80",
   "cert": false
 }
