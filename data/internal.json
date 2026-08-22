@@ -1,0 +1,7 @@
+{
+  "backend_name": "internal",
+  "domain": "*.internal.kamuridesu.com",
+  "acl": ["hdr_end(host) -i .internal.kamuridesu.com", "src 10.0.0.0/24"],
+  "match_mode": "and",
+  "config": "backend internal_backend\n    log global\n    mode http\n    balance roundrobin\n    server back home.server:80 check\n"
+}
